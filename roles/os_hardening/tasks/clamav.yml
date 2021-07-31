@@ -6,21 +6,24 @@
   set_fact:
     clamav_daemon: "{{ __clamav_daemon }}"
   when: clamav_daemon is not defined
-
+  ignore_errors: "{{ ansible_check_mode }}"
 - name: Define clamav_freshclam_daemon.
   set_fact:
     clamav_freshclam_daemon: "{{ __clamav_freshclam_daemon }}"
   when: clamav_freshclam_daemon is not defined
-
+  ignore_errors: "{{ ansible_check_mode }}"
 - name: Define clamav_packages.
   set_fact:
     clamav_packages: "{{ __clamav_packages | list }}"
   when: clamav_packages is not defined
+  ignore_errors: "{{ ansible_check_mode }}"
+  
 - name: Ensure ClamAV packages are installed.
   package: name={{ item }} state=present
   with_items: "{{ clamav_packages }}"
   register: clamav_packages_install
-
+  ignore_errors: "{{ ansible_check_mode }}"
+  
 - name: Run freshclam after ClamAV packages change.
   command: freshclam
   when: clamav_packages_install.changed
@@ -31,7 +34,8 @@
     - freshclam_result is failed
     - freshclam_result.stderr.find('locked by another process') != -1
   tags: ['skip_ansible_lint']
-
+  ignore_errors: "{{ ansible_check_mode }}"
+  
 - include_tasks: setup-RedHat.yml
   when: ansible_os_family == 'RedHat'
 
@@ -43,15 +47,19 @@
     state: "{{ item.state | default('present') }}"
     mode: 0644
   with_items: "{{ clamav_daemon_configuration_changes }}"
-
+  ignore_errors: "{{ ansible_check_mode }}"
+  
+  
 - name: Ensure ClamAV daemon is running (if configured).
   service:
     name: "{{ clamav_daemon }}"
     state: "{{ clamav_daemon_state }}"
     enabled: "{{ clamav_daemon_enabled }}"
+  ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Ensure ClamAV freshclam daemon is running (if configured).
   service:
     name: "{{ clamav_freshclam_daemon }}"
     state: "{{ clamav_freshclam_daemon_state }}"
     enabled: "{{ clamav_freshclam_daemon_enabled }}"
+  ignore_errors: "{{ ansible_check_mode }}"
