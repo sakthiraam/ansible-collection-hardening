@@ -380,7 +380,7 @@ os_sha_crypt_min_rounds: "640000"
 os_sha_crypt_max_rounds: "640000"
 
 # Added for clamav
-
+os_clamv_enabled: true
 clamav_daemon_configuration_changes:
   - regexp: '^.*Example$'
     state: absent
