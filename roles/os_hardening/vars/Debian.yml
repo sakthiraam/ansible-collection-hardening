@@ -43,3 +43,14 @@ tally2_path: '/usr/share/pam-configs/tally2'
 passwdqc_path: '/usr/share/pam-configs/passwdqc'
 
 hidepid_option: '2'  # allowed values: 0, 1, 2
+
+## Added for installing clamav
+
+clamav_daemon_localsocket: /var/run/clamav/clamd.ctl
+clamav_daemon_config_path: /etc/clamav/clamd.conf
+__clamav_daemon: 'clamav-daemon'
+__clamav_freshclam_daemon: 'clamav-freshclam'
+__clamav_packages:
+  - clamav
+  - clamav-base
+  - clamav-daemon
