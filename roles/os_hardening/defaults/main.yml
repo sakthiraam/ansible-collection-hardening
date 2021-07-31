@@ -378,3 +378,19 @@ os_selinux_enabled: true
 # The values must be inside the 1000-999999999 range.
 os_sha_crypt_min_rounds: "640000"
 os_sha_crypt_max_rounds: "640000"
+
+# Added for clamav
+
+clamav_daemon_configuration_changes:
+  - regexp: '^.*Example$'
+    state: absent
+  - regexp: '^.*LocalSocket .*$'
+    line: 'LocalSocket {{ clamav_daemon_localsocket }}'
+
+# clamav_daemon: 'clamav-daemon'
+clamav_daemon_state: started
+clamav_daemon_enabled: true
+
+# clamav_freshclam_daemon: 'clamav-freshclam'
+clamav_freshclam_daemon_state: started
+clamav_freshclam_daemon_enabled: true
